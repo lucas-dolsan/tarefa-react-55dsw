@@ -1,11 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Login from "./views/auth/Login";
 import Compromissos from "./views/compromissos";
 import Contatos from "./views/contatos";
 import Usuarios from "./views/usuarios";
+import authController from "./views/auth/authController";
 
-export default function App() {
+export default function AppRouter() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const response = await authController.validateAccessToken();
+      setIsAuthenticated(response);
+    })();
+  });
+
+  if (!isAuthenticated) return <Login />;
+
   return (
     <Router>
       <Navbar bg="dark" variant="dark">
@@ -19,6 +32,9 @@ export default function App() {
         </Container>
       </Navbar>
       <Switch>
+        <Route path="/login">
+          <Login />
+        </Route>
         <Route path="/compromissos">
           <Compromissos />
         </Route>
