@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
+import ItemList from "../../components/ItemList";
 import contatosController from "./contatosController";
 import ModalDeEdicaoDeContato from "./ModalDeEdicaoDeContato";
 
@@ -49,38 +50,35 @@ export default function Contatos() {
     }
   }
 
-  function onClickEditContato(contato) {
+  function onEditar(contato) {
     setForm(contato);
     setIsModalDeEdicaoVisivel(true);
   }
 
   return (
-    <>
-      <Button variant="primary" onClick={() => setIsModalDeEdicaoVisivel(true)}>
+    <Container>
+      <Button
+        variant="primary"
+        className="mt-2 mb-2"
+        onClick={() => setIsModalDeEdicaoVisivel(true)}
+      >
         Criar novo
       </Button>
-      <ListGroup>
-        {contatos.map((contato) => (
-          <Container key={contato._id}>
-            <Row>
-              <Col>
-                <ListGroup.Item onClick={() => onClickEditContato(contato)}>
-                  {contato.nome}
-                </ListGroup.Item>
-              </Col>
-              <Col>
-                <Button onClick={() => onApagar(contato)}>Apagar</Button>
-              </Col>
-            </Row>
-          </Container>
-        ))}
-      </ListGroup>
+      <Row>
+        <ItemList
+          items={contatos}
+          onDelete={onApagar}
+          onEdit={onEditar}
+          renderItem={({ nome }) => <ListGroup.Item>{nome}</ListGroup.Item>}
+          key="_id"
+        />
+      </Row>
       <ModalDeEdicaoDeContato
         visivel={isModalDeEdicaoVisivel}
         setVisivel={setIsModalDeEdicaoVisivel}
         onSalvar={salvarContato}
         form={form}
       />
-    </>
+    </Container>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
+import { Button, Container, ListGroup, Row } from "react-bootstrap";
+import ItemList from "../../components/ItemList";
 import compromissosController from "./compromissosController";
 import ModalDeEdicaoDeCompromisso from "./ModalDeEdicaoDeCompromisso";
 
@@ -54,40 +55,35 @@ export default function Compromissos() {
     }
   }
 
-  function onClickEditCompromisso(compromisso) {
+  function onEditar(compromisso) {
     setForm(compromisso);
     setIsModalDeEdicaoVisivel(true);
   }
 
   return (
-    <>
-      <Button variant="primary" onClick={() => setIsModalDeEdicaoVisivel(true)}>
+    <Container>
+      <Button
+        variant="primary"
+        className="mt-2 mb-2"
+        onClick={() => setIsModalDeEdicaoVisivel(true)}
+      >
         Criar novo
       </Button>
-      <ListGroup>
-        {compromissos.map((compromisso) => (
-          <Container key={compromisso._id}>
-            <Row>
-              <Col>
-                <ListGroup.Item
-                  onClick={() => onClickEditCompromisso(compromisso)}
-                >
-                  {compromisso.nome}
-                </ListGroup.Item>
-              </Col>
-              <Col>
-                <Button onClick={() => onApagar(compromisso)}>Apagar</Button>
-              </Col>
-            </Row>
-          </Container>
-        ))}
-      </ListGroup>
+      <Row>
+        <ItemList
+          items={compromissos}
+          onDelete={onApagar}
+          onEdit={onEditar}
+          renderItem={({ nome }) => <ListGroup.Item>{nome}</ListGroup.Item>}
+          key="_id"
+        />
+      </Row>
       <ModalDeEdicaoDeCompromisso
         visivel={isModalDeEdicaoVisivel}
         setVisivel={setIsModalDeEdicaoVisivel}
         onSalvar={salvarCompromisso}
         form={form}
       />
-    </>
+    </Container>
   );
 }
