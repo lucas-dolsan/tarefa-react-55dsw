@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, ListGroup } from "react-bootstrap";
+import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import contatosController from "./contatosController";
 import ModalDeEdicaoDeContato from "./ModalDeEdicaoDeContato";
 
@@ -7,21 +7,43 @@ export default function Contatos() {
   const [contatos, setContatos] = useState([]);
   const [isModalDeEdicaoVisivel, setIsModalDeEdicaoVisivel] = useState(false);
   const [form, setForm] = useState({});
-
-  useEffect(() =>
-    (async () => {
-      const contatos = await contatosController.getAll();
-      setContatos(contatos);
-    })()
+  useEffect(
+    () =>
+      (async () => {
+        const contatos = await contatosController.getAll();
+        setContatos(contatos);
+      })(),
+    []
   );
 
-  async function editarContato(contato) {
+  async function salvarContato(contato) {
     try {
-      const response = contato._id
-        ? await contatosController.updateOneById(contato._id, contato)
-        : await contatosController.createOne(contato);
+      contato._id ? editarContato(contato) : criarContato(contato);
+    } catch (error) {
+      alert(error.message);
+    }
+  }
 
-      console.log(response);
+  async function criarContato(contato) {
+    const novoContato = await contatosController.createOne(contato);
+    setContatos([...contatos, novoContato]);
+  }
+
+  async function editarContato(contato) {
+    const compromissoAtualizado = await contatosController.updateOneById(
+      contato._id,
+      contato
+    );
+    setContatos([
+      ...contatos.filter(({ _id }) => _id !== contato._id),
+      compromissoAtualizado,
+    ]);
+  }
+
+  async function onApagar(contato) {
+    try {
+      await contatosController.deleteOneById(contato._id);
+      setContatos(contatos.filter(({ _id }) => contato._id !== _id));
     } catch (error) {
       alert(error.message);
     }
@@ -39,15 +61,24 @@ export default function Contatos() {
       </Button>
       <ListGroup>
         {contatos.map((contato) => (
-          <ListGroup.Item onClick={() => onClickEditContato(contato)}>
-            {contato.nome}
-          </ListGroup.Item>
+          <Container key={contato._id}>
+            <Row>
+              <Col>
+                <ListGroup.Item onClick={() => onClickEditContato(contato)}>
+                  {contato.nome}
+                </ListGroup.Item>
+              </Col>
+              <Col>
+                <Button onClick={() => onApagar(contato)}>Apagar</Button>
+              </Col>
+            </Row>
+          </Container>
         ))}
       </ListGroup>
       <ModalDeEdicaoDeContato
         visivel={isModalDeEdicaoVisivel}
         setVisivel={setIsModalDeEdicaoVisivel}
-        onSalvar={editarContato}
+        onSalvar={salvarContato}
         form={form}
       />
     </>
