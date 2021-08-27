@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ListGroup } from "react-bootstrap";
+import ItemList from "../../components/ItemList";
 import usuariosController from "./usuariosController";
 
 export default function Usuarios() {
@@ -15,10 +16,11 @@ export default function Usuarios() {
   );
 
   return (
-    <ListGroup>
-      {usuarios.map((usuario) => (
-        <ListGroup.Item>{usuario.nome}</ListGroup.Item>
-      ))}
-    </ListGroup>
+    <ItemList
+      items={usuarios}
+      renderItem={({ nome }) => <ListGroup.Item>{nome}</ListGroup.Item>}
+      key="_id"
+      disableActions={true}
+    />
   );
 }
