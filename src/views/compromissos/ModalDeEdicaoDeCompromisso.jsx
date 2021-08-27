@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
+import PickerDeContato from "../contatos/PickerDeContato";
 
 const defaultFormContent = {
   nome: "",
   descricao: "",
   local: "",
   data: "",
+  contatoId: "",
+  usuarioId: "",
 };
 
 export default function ModalDeEdicaoDeContato({
@@ -69,6 +72,14 @@ export default function ModalDeEdicaoDeContato({
               value={formContent.data}
               onChange={(e) =>
                 setFormContent({ ...formContent, data: e.target.value })
+              }
+            />
+          </Form.Group>
+          <Form.Group>
+            <PickerDeContato
+              value={formContent.contatoId}
+              onChange={(e) =>
+                setFormContent({ ...formContent, contatoId: e.target.value })
               }
             />
           </Form.Group>

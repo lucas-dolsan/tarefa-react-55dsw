@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
+import PickerDeUsuario from "../usuarios/PickerDeUsuarios";
 
 const defaultFormContent = {
   nome: "",
@@ -58,6 +59,14 @@ export default function ModalDeEdicaoDeContato({
               value={formContent.email}
               onChange={(e) =>
                 setFormContent({ ...formContent, email: e.target.value })
+              }
+            />
+          </Form.Group>
+          <Form.Group>
+            <PickerDeUsuario
+              value={formContent.usuarioId}
+              onChange={(e) =>
+                setFormContent({ ...formContent, usuarioId: e.target.value })
               }
             />
           </Form.Group>
