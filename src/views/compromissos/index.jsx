@@ -1,30 +1,54 @@
 import React, { useEffect, useState } from "react";
-import { Button, ListGroup } from "react-bootstrap";
+import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import compromissosController from "./compromissosController";
 import ModalDeEdicaoDeCompromisso from "./ModalDeEdicaoDeCompromisso";
 
 export default function Compromissos() {
-  const [compromissos, setCompromissos] = useState([]);
+  let [compromissos, setCompromissos] = useState([]);
   const [isModalDeEdicaoVisivel, setIsModalDeEdicaoVisivel] = useState(false);
   const [form, setForm] = useState({});
 
-  useEffect(() =>
-    (async () => {
-      const compromissos = await compromissosController.getAll();
-      setCompromissos(compromissos);
-    })()
+  useEffect(
+    () =>
+      (async () => {
+        const compromissos = await compromissosController.getAll();
+        setCompromissos(compromissos);
+      })(),
+    []
   );
 
-  async function editarCompromisso(compromisso) {
+  async function salvarCompromisso(compromisso) {
     try {
-      const response = compromisso._id
-        ? await compromissosController.updateOneById(
-            compromisso._id,
-            compromisso
-          )
-        : await compromissosController.createOne(compromisso);
+      compromisso._id
+        ? editarCompromisso(compromisso)
+        : criarCompromisso(compromisso);
+    } catch (error) {
+      alert(error.message);
+    }
+  }
 
-      console.log(response);
+  async function criarCompromisso(compromisso) {
+    const novoCompromisso = await compromissosController.createOne(compromisso);
+    setCompromissos([...compromissos, novoCompromisso]);
+  }
+
+  async function editarCompromisso(compromisso) {
+    const compromissoAtualizado = await compromissosController.updateOneById(
+      compromisso._id,
+      compromisso
+    );
+    setCompromissos([
+      ...compromissos.filter(({ _id }) => _id !== compromisso._id),
+      compromissoAtualizado,
+    ]);
+  }
+
+  async function onApagar(compromisso) {
+    try {
+      await compromissosController.deleteOneById(compromisso._id);
+      setCompromissos(
+        compromissos.filter(({ _id }) => compromisso._id !== _id)
+      );
     } catch (error) {
       alert(error.message);
     }
@@ -42,15 +66,26 @@ export default function Compromissos() {
       </Button>
       <ListGroup>
         {compromissos.map((compromisso) => (
-          <ListGroup.Item onClick={() => onClickEditCompromisso(compromisso)}>
-            {compromisso.nome}
-          </ListGroup.Item>
+          <Container key={compromisso._id}>
+            <Row>
+              <Col>
+                <ListGroup.Item
+                  onClick={() => onClickEditCompromisso(compromisso)}
+                >
+                  {compromisso.nome}
+                </ListGroup.Item>
+              </Col>
+              <Col>
+                <Button onClick={() => onApagar(compromisso)}>Apagar</Button>
+              </Col>
+            </Row>
+          </Container>
         ))}
       </ListGroup>
       <ModalDeEdicaoDeCompromisso
         visivel={isModalDeEdicaoVisivel}
         setVisivel={setIsModalDeEdicaoVisivel}
-        onSalvar={editarCompromisso}
+        onSalvar={salvarCompromisso}
         form={form}
       />
     </>

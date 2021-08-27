@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { Container, Nav, Navbar, Spinner } from "react-bootstrap";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Login from "./views/auth/Login";
 import Compromissos from "./views/compromissos";
@@ -9,13 +9,22 @@ import authController from "./views/auth/authController";
 
 export default function AppRouter() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       const response = await authController.validateAccessToken();
       setIsAuthenticated(response);
+      setIsLoading(false);
     })();
   });
+
+  if (isLoading)
+    return (
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <Spinner animation="border" />;
+      </div>
+    );
 
   if (!isAuthenticated) return <Login />;
 

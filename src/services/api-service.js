@@ -26,8 +26,7 @@ async function putRequest(resource, data) {
 
 async function deleteRequest(resource, data) {
     const url = `${configService.serverHost}/${resource}`
-    const response = await fetch(url, { headers, method: "post", body: JSON.stringify(data) })
-    return await response.json()
+    await fetch(url, { headers, method: "delete", body: JSON.stringify(data) })
 }
 
 const apiService = {
