@@ -32,7 +32,7 @@ export default function AppRouter() {
     <Router>
       <Navbar bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand href="compromissos">Nice</Navbar.Brand>
+          <Navbar.Brand href="login">Login</Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link href="compromissos">Compromissos</Nav.Link>
             <Nav.Link href="contatos">Contatos</Nav.Link>

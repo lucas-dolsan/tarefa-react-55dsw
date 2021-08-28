@@ -39,7 +39,7 @@ export default function Login() {
     <>
       <Form>
         <Form.Group className="mb-3">
-          <Form.Label>username</Form.Label>
+          <Form.Label>Username</Form.Label>
           <Form.Control
             type="text"
             value={formContent.username}
@@ -49,7 +49,7 @@ export default function Login() {
           />
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label>senha</Form.Label>
+          <Form.Label>Senha</Form.Label>
           <Form.Control
             type="password"
             value={formContent.senha}

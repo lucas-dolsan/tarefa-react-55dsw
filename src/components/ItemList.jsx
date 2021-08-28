@@ -10,14 +10,14 @@ export default function ItemList({
   disableActions,
 }) {
   return (
-    <ListGroup>
+    <ListGroup className="gradient-list">
       {items.map((item) => (
         <Container className="p-1" key={item[key]}>
-          <Row>
-            <Col>
+          <Row className="list-item">
+            <Col className="Col-1">
               <ListGroup.Item>{renderItem(item)}</ListGroup.Item>
             </Col>
-            <Col>
+            <Col className="Col-2">
               <Button
                 disabled={disableActions}
                 className="m-1"
